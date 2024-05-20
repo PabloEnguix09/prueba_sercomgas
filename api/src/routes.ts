@@ -14,22 +14,22 @@ export function configureRoutes(server: FastifyInstance) {
     })
 
     // POST /marketers
-    server.post<{ Body: MarketerType; Reply: IReply<MarketerType> }>("/marketers", {
-        preValidation: async (request, reply, done) => {
-            const { name } = request.body;
-            const marketerRepository = server.orm["typeorm"].getRepository(Marketer);
-            const marketers = await marketerRepository.findOneBy({ name });
-            done(
-                marketers ? new Error("Marketer already exists") : undefined
-            );
-        }
-    }, async (request, reply) => {
+    server.post<{ Body: MarketerType; Reply: IReply<MarketerType> }>("/marketers", async (request, reply) => {
         const { name } = request.body;
         const marketer = new Marketer();
         marketer.name = name;
         const marketerRepository = server.orm["typeorm"].getRepository(Marketer);
-        await marketerRepository.save(marketer);
-        reply.code(201).send({ success: true, data: marketer });
+        const marketerAlreadyExists = await marketerRepository.findOneBy({ name });
+        if(marketerAlreadyExists) {
+            reply.code(409).send({ message: "Marketer already exists" });
+        }
+        else if(marketerAlreadyExists == null) {
+            await marketerRepository.save(marketer);
+            reply.code(201).send({ success: true, data: marketer });
+        }
+        else {
+            reply.code(500).send({ message: "An error occurred" });
+        }
     })
 
     // GET /operations
@@ -40,16 +40,7 @@ export function configureRoutes(server: FastifyInstance) {
     })
 
     // POST /operations
-    server.post<{ Body: OperationType; Reply: IReply<OperationType> }>("/operations", {
-        preValidation: async (request, reply, done) => {
-            const { marketer_id, client_id, type, amount, price } = request.body;
-            const operationRepository = server.orm["typeorm"].getRepository(Operation);
-            const operation = await operationRepository.findOneBy({ marketer_id, client_id, type, amount, price });
-            done(
-                operation ? new Error("Operation already exists") : undefined
-            );
-        }
-    }, async (request, reply) => {
+    server.post<{ Body: OperationType; Reply: IReply<OperationType> }>("/operations", async (request, reply) => {
         const { marketer_id, client_id, type, amount, price } = request.body;
         const operation = new Operation();
         operation.marketer_id = marketer_id;
@@ -58,7 +49,16 @@ export function configureRoutes(server: FastifyInstance) {
         operation.amount = amount;
         operation.price = price;
         const operationRepository = server.orm["typeorm"].getRepository(Operation);
-        await operationRepository.save(operation);
-        reply.code(201).send({ success: true, data: operation });
+        const operationAlreadyExists = await operationRepository.findOneBy({ marketer_id, client_id, type, amount, price });
+        if(operationAlreadyExists) {
+            reply.code(412).send({ message: "Operation already exists" });
+        }
+        else if(operationAlreadyExists == null) {
+            await operationRepository.save(operation);
+            reply.code(201).send({ success: true, data: operation });
+        }
+        else {
+            reply.code(500).send({ message: "Internal server error" });
+        }
     })
 }

@@ -11,7 +11,7 @@ export const AppDataSource = new DataSource({
     password: process.env.DB_PASS || "postgres",
     database: process.env.DB_DB_ || "sercomgas",
     synchronize: true,
-    logging: true,
+    logging: false,
     entities: [Marketer, Operation],
     migrations: [],
     subscribers: [],

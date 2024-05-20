@@ -1,8 +1,5 @@
-import { AppDataSource } from "./db/data-source";
 import * as dotenv from "dotenv";
 import Fastify, { FastifyInstance } from "fastify";
-import { Marketer } from "./db/entity/marketer.entity";
-import { Operation } from "./db/entity/operation.entity"; // remove later
 import { TypeBoxTypeProvider } from "@fastify/type-provider-typebox";
 import { configureRoutes } from "./routes";
 import { configureDatabase } from "./db.config";

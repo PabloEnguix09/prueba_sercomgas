@@ -3,7 +3,9 @@ import {
     Entity,
     PrimaryGeneratedColumn,
     JoinColumn,
-    OneToMany
+    OneToMany,
+    ManyToOne,
+    OneToOne
 } from "typeorm";
 import { Marketer } from "./marketer.entity";
 
@@ -12,12 +14,12 @@ export class Operation {
     @PrimaryGeneratedColumn("increment")
     id!: number;
 
-    @OneToMany(() => Marketer, (marketer) => marketer.id)
-    @Column({ type: 'int' })
+    @Column({ type: 'int', name: 'marketer_id' })
+    @OneToOne(() => Marketer, (marketer) => marketer.id)
     marketer_id!: number;
 
-    @OneToMany(() => Marketer, (marketer) => marketer.id)
-    @Column({ type: 'int' })
+    @Column({ type: 'int', name: 'client_id' })
+    @OneToOne(() => Marketer, (marketer) => marketer.id)
     client_id!: number;
 
     @Column({ type: 'varchar', length: 20 })
