@@ -16,6 +16,7 @@ const Operation = Type.Object({
     type: Type.String(),
     amount: Type.Number(),
     price: Type.Number(),
+    created_at: Type.Date()
 })
 
 export type OperationType = Static<typeof Operation>;

@@ -4,6 +4,9 @@ import { Marketer } from "./db/entity/marketer.entity";
 import { Operation } from "./db/entity/operation.entity";
 
 export function configureDatabase(server: FastifyInstance) {
+  
+  console.log("Database config");
+  
   server.register(plugin, {
     namespace: "typeorm",
     type: "postgres",
@@ -12,7 +15,7 @@ export function configureDatabase(server: FastifyInstance) {
     username: process.env.DB_USER,
     password: process.env.DB_PASS,
     database: process.env.DB_NAME,
-    synchronize: process.env.NODE_ENV === "dev" ? true : false,
+    synchronize: process.env.NODE_ENV === "dev" ? true : true,
     logging: process.env.NODE_ENV === "dev" ? true : false,
     migrations: [__dirname + "/migration/*.ts"],
     subscribers: [],

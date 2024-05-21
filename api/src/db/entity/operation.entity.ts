@@ -2,10 +2,8 @@ import {
     Column,
     Entity,
     PrimaryGeneratedColumn,
-    JoinColumn,
-    OneToMany,
-    ManyToOne,
-    OneToOne
+    OneToOne,
+    CreateDateColumn
 } from "typeorm";
 import { Marketer } from "./marketer.entity";
 
@@ -30,5 +28,8 @@ export class Operation {
 
     @Column({type: 'float'})
     price!: number;
+
+    @CreateDateColumn()
+    created_at!: Date
 }
     
