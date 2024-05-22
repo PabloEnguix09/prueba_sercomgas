@@ -6,17 +6,38 @@ import CurrencyInput from "react-currency-input-field";
 import { useState } from "react";
 import "../css/NewOperation.css";
 
-async function crearOperacion(marketer_id: number, client_id: number, type: string) {
+async function crearOperacion(marketer_id: number, client_id: number, type: string, amount: number, price: number) {
+  
+  try {
 
-	const amount = parseInt((document.getElementById('amount') as HTMLInputElement).value);
-	const price = parseFloat((document.getElementById('price') as HTMLInputElement).value);
-	await createOperation(marketer_id, client_id, type, amount, price).then(() => {
-		window.location.href = 'http://localhost:3001/';
-	}).catch((error) => {
-		const err = error instanceof Error ? error.message : 'Error al crear la operación';
+    if(marketer_id === 0 || client_id === 0 || type === '' || amount === 0 || price === 0) {
+      throw new Error('Todos los campos son obligatorios');
+    }
+    if(marketer_id === client_id) {
+      throw new Error('El cliente no puede ser el mismo que el proveedor');
+    }
+    if(amount < 0 || amount === 0 || isNaN(amount)) {
+      throw new Error('La cantidad de gas debe ser un número mayor que 0');
+    }
+    if(price < 0 || price === 0 || isNaN(price)) {
+      throw new Error('El precio debe ser un número mayor que 0');
+    }
+    await createOperation(marketer_id, client_id, type, amount, price).then((res) => {
+      if(res.status === 201) {
+        window.location.href = 'http://localhost:3001/';
+      }
+      else if(res.status === 412) {
+        throw new Error('Operación ya existente');
+      }
+      else {
+        throw new Error('Error al crear la operación');
+      }
+    })
+  } catch (error) {
+    const err = error instanceof Error ? error.message : 'Error al crear la operación';
 		const errorElement = document.getElementById('error-message');
 		errorElement!.innerHTML = err;
-	});
+  }
 }
 
 function NewOperation() {
@@ -29,6 +50,8 @@ function NewOperation() {
   const [marketer_id, setMarketerId] = useState(0);
   const [client_id, setClientId] = useState(0);
   const [type, setType] = useState('');
+  const [amount, setAmount] = useState(0);
+  const [price, setPrice] = useState(0);
 
   if(isLoading) {
     return <div>Cargando...</div>
@@ -54,15 +77,17 @@ function NewOperation() {
 
   return (
     <div className="NewOperation">
-        <form>
-            <h1>Crear operación</h1>
-            <Select id="marketer_id" options={marketers} placeholder="Proveedor" onChange={(e: any) => setMarketerId(e?.value)} />
-            <Select id="client_id" options={marketers} placeholder="Cliente" onChange={(e: any) => setClientId(parseInt(e?.value))}/>
-            <Select id="type" options={operationTypes} placeholder="Tipo de operación" onChange={(e: any) => setType(e?.value)}/>
-            <CurrencyInput id="amount" placeholder="Cantidad de gas (L)" min={0} suffix={'L'} allowNegativeValue={false}/>
-            <CurrencyInput id="price" placeholder="Precio total (€)" min={0} decimalsLimit={2} decimalSeparator="," groupSeparator="." suffix={'€'} allowNegativeValue={false}/>
-            <button onClick={(event) => {event?.preventDefault(); crearOperacion(marketer_id, client_id, type)}}>Crear operación</button>
-            <span id="error-message"></span>
+        <h1 className="text-center my-3">Crear operación</h1>
+        <form className="row g-4 mx-5">
+            <Select className="col-6 ps-0" id="marketer_id" options={marketers} placeholder="Proveedor" onChange={(e: any) => setMarketerId(e?.value)} />
+            <Select className="col-6 pe-0" id="client_id" options={marketers} placeholder="Cliente" onChange={(e: any) => setClientId(parseInt(e?.value))}/>
+            <Select className="p-0 text-center" id="type" options={operationTypes} placeholder="Tipo de operación" onChange={(e: any) => setType(e?.value)}/>
+            <div className="col-12 d-flex p-0 gap-4">
+              <CurrencyInput className="form-control" id="amount" placeholder="Cantidad de gas (L)" min={0} suffix={' L'} groupSeparator="," decimalSeparator="." allowDecimals={false} allowNegativeValue={false} onChange={(e:any) => setAmount(parseInt(e.target.value.replace(',', '')))}/>
+              <CurrencyInput className="form-control" id="price" placeholder="Precio total (€)" min={0} decimalsLimit={2} suffix=" €" groupSeparator="," decimalSeparator="." allowNegativeValue={false} onChange={(e:any) => setPrice(parseFloat(e.target.value.replace(',', '')))}/>
+            </div>
+            <button className="btn btn-primary" onClick={(event) => {event?.preventDefault(); crearOperacion(marketer_id, client_id, type, amount, price)}}>Crear operación</button>
+            <span className="p-0 text-danger text-center" id="error-message"></span>
         </form>
     </div>
   );

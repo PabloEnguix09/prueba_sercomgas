@@ -1,29 +1,22 @@
 import './App.css';
-import { useMutation, useQueries, useQuery, useQueryClient } from '@tanstack/react-query';
-import { listMarketers, listOperations, createMarketer, createOperation } from './routes';
+import { useQueries, useQuery, useQueryClient } from '@tanstack/react-query';
+import { listMarketers, listOperations } from './routes';
 import { Marketer } from './types/types';
-
-function crearOperacion() {
-	const marketer_id = (document.getElementById('marketer_id') as HTMLInputElement).value;
-	const client_id = (document.getElementById('client_id') as HTMLInputElement).value;
-	const type = (document.getElementById('type') as HTMLInputElement).value;
-	const amount = (document.getElementById('amount') as HTMLInputElement).value;
-	const price = (document.getElementById('price') as HTMLInputElement).value;
-	createOperation(Number(marketer_id), Number(client_id), type, Number(amount), Number(price))
-}
+import { useState } from 'react';
 
 function App() {
-  const queryClient = useQueryClient();
+  const [currPage, setCurrPage] = useState(1);
+  let limit = 10;
 
   const [marketersQuery, operationsQuery] = useQueries({
     queries: [
       {
         queryKey: ['marketers'],
-        queryFn: listMarketers
+        queryFn: listMarketers,
       },
       {
-        queryKey: ['operations'],
-        queryFn: listOperations
+        queryKey: ['operations', limit, currPage],
+        queryFn: () => listOperations(limit, currPage),
       }
     ]
   })
@@ -37,27 +30,27 @@ function App() {
   return (
     <div className="App">
 
-      <h1>Operaciones</h1>
+      <h1 className='my-3'>Operaciones</h1>
       <table className='table table-responsive table-striped table-hover table-bordered'>
         <thead className='table-dark'>
           <tr>
             <th>Proveedor</th>
             <th>Cliente</th>
-            <th>Importe</th>
-            <th>Precio</th>
-            <th>Tipo</th>
+            <th>Litros de gas</th>
+            <th>Precio total</th>
+            <th>Operación</th>
             <th>Fecha</th>
           </tr>
         </thead>
         <tbody>
           {operationsQuery.data.map((operation: any) => {
-            let created_at = new Date(operation.created_at);            
+            let created_at = new Date(operation.created_at);
             return (
-              <tr key={operation.id}>
+              <tr className='table-data' key={operation.id}>
                 <td>{marketersQuery.data.find((marketer: Marketer) => marketer.id === operation.marketer_id)?.name}</td>
                 <td>{marketersQuery.data.find((marketer: Marketer) => marketer.id === operation.client_id)?.name}</td>
-                <td>{operation.amount}</td>
-                <td>{operation.price}</td>
+                <td>{parseFloat(operation.amount).toLocaleString('es-ES', { maximumFractionDigits: 2, useGrouping: true })} L</td>
+                <td>{parseFloat(operation.price).toLocaleString('es-ES', { maximumFractionDigits: 2, useGrouping: true, style: 'currency', currency: 'EUR' })}</td>
                 <td>{operation.type}</td>
                 <td>{created_at.toLocaleDateString()}</td>
               </tr>
@@ -66,11 +59,9 @@ function App() {
           <tr>
             <td colSpan={100}>
               <ul className="pagination justify-content-center m-0">
-                <li className="page-item"><button className="page-link">&laquo;</button></li>
-                <li className="page-item"><button className="page-link">1</button></li>
-                <li className="page-item"><button className="page-link">2</button></li>
-                <li className="page-item"><button className="page-link">3</button></li>
-                <li className="page-item"><button className="page-link">&raquo;</button></li>
+                <li className={`page-item ${currPage === 1 ? 'disabled' : ''}`}><button className="page-link" onClick={() => setCurrPage(currPage - 1)}>&laquo;</button></li>
+                <li className="page-item"><span className="page-link">Página {currPage}</span></li>
+                <li className={`page-item ${operationsQuery.data.length < limit ? 'disabled' : ''}`}><button className="page-link" onClick={() => setCurrPage(currPage + 1)}>&raquo;</button></li>
               </ul>
             </td>
           </tr>

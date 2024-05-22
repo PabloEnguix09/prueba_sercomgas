@@ -4,9 +4,10 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
-import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import NewOperation from './layouts/NewOperation';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+import Navbar from './components/Navbar';
+import Footer from './components/Footer';
 
 const router = createBrowserRouter([
 
@@ -28,7 +29,9 @@ const queryClient = new QueryClient();
 
 root.render(
   <QueryClientProvider client={queryClient}>
+    <Navbar />
     <RouterProvider router={router} />
+    <Footer />
   </QueryClientProvider>
 );
 

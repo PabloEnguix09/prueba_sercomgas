@@ -33,9 +33,19 @@ export function configureRoutes(server: FastifyInstance) {
     })
 
     // GET /operations
-    server.get<{ Reply: IReply<OperationType[]> }>("/operations", async (request, reply) => {
+    server.get<{ Reply: IReply<OperationType[]>; Querystring: { limit: string; page: string } }>("/operations", async (request, reply) => {
+        const { limit, page} = request.query;
+        const limitDefault = 2;
+        const pageDefault = 1;
+        const limitV = limit ? parseInt(limit) : limitDefault;
+        const pageV = page ? parseInt(page) : pageDefault;
+        const skip = (limitV * pageV) - limitV;
+
         const operationRepository = server.orm["typeorm"].getRepository(Operation);
-        const operations = await operationRepository.find();
+        const operations = await operationRepository.find({
+            take: limitV,
+            skip: skip
+        });
         reply.code(200).send({ success: true, data: operations });
     })
 
