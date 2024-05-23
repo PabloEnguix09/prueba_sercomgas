@@ -20,7 +20,6 @@ describe("TESTS ", () => {
 
             console.log(`server listening on ${address}`);
         });
-
     });
 
     beforeEach(async () => {
@@ -38,10 +37,10 @@ describe("TESTS ", () => {
                 method: "GET",
                 url: "/",
               });
-          expect(response.statusCode).toBe(200);
-
-        })
-    })
+          
+              expect(response.statusCode).toBe(200);
+        });
+    });
 
     describe("/marketers", () => {
         it("GET /marketers should return 404", async () => {
@@ -51,7 +50,7 @@ describe("TESTS ", () => {
             });
     
             expect(response.statusCode).toBe(404);
-        })
+        });
     
         it("GET /marketers should return 200 empty", async () => {
             const response = await server.inject({
@@ -60,7 +59,6 @@ describe("TESTS ", () => {
             });
     
             expect(response.statusCode).toBe(200);
-    
             expect(response.json().data).toEqual([]);
         });
 
@@ -74,7 +72,6 @@ describe("TESTS ", () => {
             });
     
             expect(response.statusCode).toBe(201);
-    
             expect(response.json().data.name).toEqual("test");
         });
 
@@ -97,7 +94,6 @@ describe("TESTS ", () => {
             });
     
             expect(response.statusCode).toBe(200);
-
             expect(response.json().data[0].name).toEqual("test");
         });
 
@@ -129,14 +125,14 @@ describe("TESTS ", () => {
                 name: "other"
               }
             });
-        })
+        });
 
         afterAll(async () => {
             await server.inject({
               method: "DELETE",
               url: "/marketers",
             });
-        })
+        });
 
         it("GET /operations should return 404", async () => {
             const response = await server.inject({
@@ -145,7 +141,7 @@ describe("TESTS ", () => {
             });
     
             expect(response.statusCode).toBe(404);
-        })
+        });
 
         it("GET /operations should return 200 empty", async () => {
             const response = await server.inject({
@@ -165,7 +161,7 @@ describe("TESTS ", () => {
               type: "Compra",
               amount: 1,
               price: 1
-            }
+            };
             const response = await server.inject({
               method: "POST",
               url: "/operations",
@@ -173,7 +169,7 @@ describe("TESTS ", () => {
             });
     
             expect(response.statusCode).toBe(201);
-    
+            
             expect(response.json().data.marketer_id).toEqual(1);
             expect(response.json().data.client_id).toEqual(2);
             expect(response.json().data.type).toEqual("Compra");
@@ -188,7 +184,7 @@ describe("TESTS ", () => {
             });
     
             expect(response.statusCode).toBe(200);
-    
+
             expect(response.json().data[0].marketer_id).toEqual(1);
             expect(response.json().data[0].client_id).toEqual(2);
             expect(response.json().data[0].type).toEqual("Compra");
@@ -204,5 +200,5 @@ describe("TESTS ", () => {
     
             expect(response.statusCode).toBe(204);
         });
-    })
+    });
   });

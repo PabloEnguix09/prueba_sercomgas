@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { createOperation, listMarketers } from "../routes";
+import { createOperation, listMarketers } from "../services/routes";
 import { Marketer } from "../types/types";
 import Select from "react-select";
 import CurrencyInput from "react-currency-input-field";
@@ -32,7 +32,7 @@ async function crearOperacion(marketer_id: number, client_id: number, type: stri
       else {
         throw new Error('Error al crear la operación');
       }
-    })
+    });
   } catch (error) {
     const err = error instanceof Error ? error.message : 'Error al crear la operación';
 		const errorElement = document.getElementById('error-message');
@@ -45,7 +45,7 @@ function NewOperation() {
   const { data, isLoading, isError } = useQuery({
         queryKey: ['marketers'],
         queryFn: listMarketers
-  })
+  });
 
   const [marketer_id, setMarketerId] = useState(0);
   const [client_id, setClientId] = useState(0);
@@ -65,7 +65,7 @@ function NewOperation() {
       value: marketer.id,
       label: marketer.name
     }
-  })
+  });
   const operationTypes = [{
     value: 'Compra',
     label: 'Compra'
@@ -73,7 +73,7 @@ function NewOperation() {
   {
     value: 'Venta',
     label: 'Venta'
-  }]
+  }];
 
   return (
     <div className="NewOperation">
@@ -90,7 +90,7 @@ function NewOperation() {
             <span className="p-0 text-danger text-center" id="error-message"></span>
         </form>
     </div>
-  );
+  )
 }
 
 export default NewOperation;

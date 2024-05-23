@@ -1,7 +1,7 @@
 import './App.css';
-import { useQueries, useQuery, useQueryClient } from '@tanstack/react-query';
-import { listMarketers, listOperations } from './routes';
-import { Marketer } from './types/types';
+import { useQueries } from '@tanstack/react-query';
+import { listMarketers, listOperations } from '../services/routes';
+import { Marketer } from '../types/types';
 import { useState } from 'react';
 
 function App() {

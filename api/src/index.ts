@@ -12,10 +12,10 @@ dotenv.config();
 async function start() {
     const app = buildServer();
     app.register(require("@fastify/cors"), {
-        origin: ["http://localhost:3001"],
-    })
+        origin: ["http://localhost:3000"],
+    });
 
-    app.listen({ port: parseInt(process.env.PORT || "3000")}, (err: Error | null, address: string) => {
+    app.listen({ port: parseInt(process.env.PORT || "8080")}, (err: Error | null, address: string) => {
         if (err) {
             app.log.error(err);
             process.exit(1);

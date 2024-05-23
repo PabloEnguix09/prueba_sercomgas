@@ -5,7 +5,7 @@ const Marketer = Type.Object({
     name: Type.String(),
     created_at: Type.Date(),
     updated_at: Type.Date(),
-})
+});
 
 export type MarketerType = Static<typeof Marketer>;
 
@@ -17,6 +17,6 @@ const Operation = Type.Object({
     amount: Type.Number(),
     price: Type.Number(),
     created_at: Type.Date()
-})
+});
 
 export type OperationType = Static<typeof Operation>;

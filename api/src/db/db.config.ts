@@ -18,6 +18,6 @@ export function configureDatabase(server: FastifyInstance) {
     migrations: [__dirname + "/migration/*.ts"],
     subscribers: [],
     migrationsRun: process.env.NODE_ENV === "dev" ? false : false,
-    entities: [Marketer, Operation],
+    entities: [Marketer, Operation]
   });
 }
