@@ -1,11 +1,9 @@
 import plugin from "typeorm-fastify-plugin";
 import { FastifyInstance } from "fastify";
-import { Marketer } from "./db/entity/marketer.entity";
-import { Operation } from "./db/entity/operation.entity";
+import { Marketer } from "./entity/marketer.entity";
+import { Operation } from "./entity/operation.entity";
 
 export function configureDatabase(server: FastifyInstance) {
-  
-  console.log("Database config");
   
   server.register(plugin, {
     namespace: "typeorm",
@@ -14,7 +12,7 @@ export function configureDatabase(server: FastifyInstance) {
     port: parseInt(process.env.DB_PORT || "5432"),
     username: process.env.DB_USER,
     password: process.env.DB_PASS,
-    database: process.env.DB_NAME,
+    database: process.env.NODE_ENV === "test" ? "testDb" : process.env.DB_NAME,
     synchronize: process.env.NODE_ENV === "dev" ? true : true,
     logging: process.env.NODE_ENV === "dev" ? true : false,
     migrations: [__dirname + "/migration/*.ts"],

@@ -6,6 +6,13 @@ import { MarketerType, OperationType } from "./lib/types";
 
 export function configureRoutes(server: FastifyInstance) {
 
+    console.log("Configuring routes...");
+    
+    // GET /
+    server.get("/", async (request, reply) => {
+        reply.code(200).send({ success: true, message: "Hello World" });
+    })
+
     // GET /marketers
     server.get<{ Reply: IReply<MarketerType[]> }>("/marketers", async (request, reply) => {
         const marketerRepository = server.orm["typeorm"].getRepository(Marketer);
@@ -30,6 +37,13 @@ export function configureRoutes(server: FastifyInstance) {
         else {
             reply.code(500).send({ message: "An error occurred" });
         }
+    })
+
+    // DELETE /marketers
+    server.delete<{ Querystring: { name: string } }>("/marketers", async (request, reply) => {
+        const marketerRepository = server.orm["typeorm"].getRepository(Marketer);
+        await marketerRepository.clear();
+        reply.code(204).send({ success: true, message: "Marketers deleted" });
     })
 
     // GET /operations
@@ -70,5 +84,12 @@ export function configureRoutes(server: FastifyInstance) {
         else {
             reply.code(500).send({ message: "Internal server error" });
         }
+    })
+
+    // DELETE /operations
+    server.delete<{ Querystring: { name: string } }>("/operations", async (request, reply) => {
+        const operationRepository = server.orm["typeorm"].getRepository(Operation);
+        await operationRepository.clear();
+        reply.code(204).send({ success: true, message: "Operations deleted" });
     })
 }
