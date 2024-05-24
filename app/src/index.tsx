@@ -1,7 +1,6 @@
-import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import './index.css';
+import './css/index.css';
 import App from './layouts/App';
 import NewOperation from './layouts/NewOperation';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';

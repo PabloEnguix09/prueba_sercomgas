@@ -1,11 +1,11 @@
 export async function listMarketers() {
-    const res = await fetch("http://localhost:3000/marketers");
+    const res = await fetch("http://localhost:8080/marketers");
     const response = await res.json();
     return response.data;
 }
 
 export async function createMarketer(name: string) {
-    const res = await fetch("http://localhost:3000/marketers", {
+    const res = await fetch("http://localhost:8080/marketers", {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
@@ -17,13 +17,13 @@ export async function createMarketer(name: string) {
 }
 
 export async function listOperations(limit: number, page: number) {    
-    const res = await fetch("http://localhost:3000/operations?limit=" + limit + "&page=" + page);
+    const res = await fetch("http://localhost:8080/operations?limit=" + limit + "&page=" + page);
     const response = await res.json();
     return response.data;
 }
 
 export async function createOperation(marketer_id: number, client_id: number, type: string, amount: number, price: number) {
-    const res = await fetch("http://localhost:3000/operations", {
+    const res = await fetch("http://localhost:8080/operations", {
         method: "POST",
         headers: {
             "Content-Type": "application/json",

@@ -1,10 +1,5 @@
 import "reflect-metadata"
 import * as dotenv from "dotenv";
-import Fastify, { FastifyBaseLogger, FastifyInstance, FastifyTypeProviderDefault, RawServerDefault } from "fastify";
-import { TypeBoxTypeProvider } from "@fastify/type-provider-typebox";
-import { configureRoutes } from "./routes";
-import { configureDatabase } from "./db/db.config";
-import { IncomingMessage, ServerResponse } from "node:http";
 import { buildServer } from "./server";
 
 dotenv.config();

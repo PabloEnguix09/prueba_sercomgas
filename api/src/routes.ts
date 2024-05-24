@@ -6,8 +6,6 @@ import { MarketerType, OperationType } from "./lib/types";
 
 export function configureRoutes(server: FastifyInstance) {
 
-    console.log("Configuring routes...");
-    
     // GET /
     server.get("/", async (request, reply) => {
         reply.code(200).send({ success: true, message: "Hello World" });

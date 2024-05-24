@@ -1,7 +1,7 @@
-import './App.css';
+import '../css/App.css';
 import { useQueries } from '@tanstack/react-query';
 import { listMarketers, listOperations } from '../services/routes';
-import { Marketer } from '../types/types';
+import { Marketer, Operation } from '../types/types';
 import { useState } from 'react';
 
 function App() {
@@ -22,10 +22,10 @@ function App() {
   })
 
   if(marketersQuery.isLoading || operationsQuery.isLoading) {
-    return <div>Cargando...</div>
+    return <div className='text-center'>Cargando...</div>
   }
   if(marketersQuery.isError || operationsQuery.isError) {
-    return <div>{marketersQuery.error ? 'Error en marketers: ' + marketersQuery.error.message : 'Error en operaciones: ' + operationsQuery.error?.message}</div>
+    return <div className='text-center'>{marketersQuery.error ? 'Error en marketers: ' + marketersQuery.error.message : 'Error en operaciones: ' + operationsQuery.error?.message}</div>
   }
   return (
     <div className="App">
@@ -43,14 +43,14 @@ function App() {
           </tr>
         </thead>
         <tbody>
-          {operationsQuery.data.map((operation: any) => {
+          {operationsQuery.data.map((operation: Operation) => {
             let created_at = new Date(operation.created_at);
             return (
               <tr className='table-data' key={operation.id}>
                 <td>{marketersQuery.data.find((marketer: Marketer) => marketer.id === operation.marketer_id)?.name}</td>
                 <td>{marketersQuery.data.find((marketer: Marketer) => marketer.id === operation.client_id)?.name}</td>
-                <td>{parseFloat(operation.amount).toLocaleString('es-ES', { maximumFractionDigits: 2, useGrouping: true })} L</td>
-                <td>{parseFloat(operation.price).toLocaleString('es-ES', { maximumFractionDigits: 2, useGrouping: true, style: 'currency', currency: 'EUR' })}</td>
+                <td>{operation.amount.toLocaleString('es-ES', { maximumFractionDigits: 2, useGrouping: true })} L</td>
+                <td>{operation.price.toLocaleString('es-ES', { maximumFractionDigits: 2, useGrouping: true, style: 'currency', currency: 'EUR' })}</td>
                 <td>{operation.type}</td>
                 <td>{created_at.toLocaleDateString()}</td>
               </tr>
@@ -69,7 +69,7 @@ function App() {
         <tfoot className='table-dark'>
           <tr>
             <td colSpan={100}>
-              <button className='btn btn-primary' onClick={() => window.location.href = 'http://localhost:3001/new_operation'}>Crear operación</button>
+              <button className='btn btn-primary' onClick={() => window.location.href = '/new_operation'}>Crear operación</button>
             </td>
           </tr>
         </tfoot>
