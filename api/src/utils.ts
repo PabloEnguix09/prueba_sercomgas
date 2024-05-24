@@ -41,8 +41,7 @@ export async function post(server: FastifyInstance, data: Marketer | Operation, 
     if(rowAlreadyExists) {
         reply.code(409).send({message: "Row already exists"});
     } else {
-        await repo.save(data).then(() =>{ console.log("xd");
-         reply.code(201).send({success: true, data: data})});
+        await repo.save(data).then(() => reply.code(201).send({success: true, data: data}));
     }
 }
 
