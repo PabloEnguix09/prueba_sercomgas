@@ -3,24 +3,12 @@ import Fastify from "fastify";
 import { configureRoutes } from "../routes";
 import * as dotenv from "dotenv";
 import { configureDatabase } from "../db/db.config";
+import { buildServer } from "../server";
 dotenv.config();
 
-const server = Fastify({ logger: false });
+//const server = Fastify({ logger: false });
+const server = buildServer();
 describe("TESTS ", () => {
-
-    beforeAll(async () => {
-        configureDatabase(server);
-        configureRoutes(server);
-
-        await server.listen({ port: parseInt(process.env.PORT || "3000")}, (err: Error | null, address: string) => {
-            if (err) {
-                server.log.error(err);
-                process.exit(1);
-            }
-
-            console.log(`server listening on ${address}`);
-        });
-    });
 
     beforeEach(async () => {
       await server.ready();

@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
-import { listMarketers } from "../services/routes";
-import { MarketerOption, OperationType } from "../types/types";
+import { list } from "../services/routes";
+import { MarketerOption, OperationTypeOpt } from "../types/types";
 import Select, { SingleValue } from "react-select";
 import CurrencyInput from "react-currency-input-field";
 import { ChangeEvent, useState } from "react";
@@ -12,7 +12,7 @@ function NewOperation() {
 
   const { data, isLoading, isError } = useQuery({
         queryKey: ['marketers'],
-        queryFn: listMarketers
+        queryFn: () => list("marketers"),
   });
 
   const [marketer_id, setMarketerId] = useState(0);
@@ -30,7 +30,7 @@ function NewOperation() {
 
   const marketers: MarketerOption[] = listMarketersOptions(data);
 
-  const operationTypes: OperationType[] = [
+  const operationTypes: OperationTypeOpt[] = [
     { value: 'Compra', label: 'Compra'},
     { value: 'Venta', label: 'Venta'}
   ];
@@ -41,7 +41,7 @@ function NewOperation() {
         <form className="row g-4 mx-5">
             <Select className="col-6 ps-0" id="marketer_id" options={marketers} placeholder="Proveedor" onChange={(e: SingleValue<MarketerOption>) => setMarketerId(e!.value)} />
             <Select className="col-6 pe-0" id="client_id" options={marketers} placeholder="Cliente" onChange={(e: SingleValue<MarketerOption>) => setClientId(e!.value)}/>
-            <Select className="p-0 text-center" id="type" options={operationTypes} placeholder="Tipo de operación" onChange={(e:SingleValue<OperationType>) => setType(e!.value)}/>
+            <Select className="p-0 text-center" id="type" options={operationTypes} placeholder="Tipo de operación" onChange={(e:SingleValue<OperationTypeOpt>) => setType(e!.value)}/>
             <div className="col-12 d-flex p-0 gap-4">
               <CurrencyInput className="form-control" id="amount" placeholder="Cantidad de gas (L)" min={0} suffix={' L'} groupSeparator="," decimalSeparator="." allowDecimals={false} allowNegativeValue={false} onChange={(e:ChangeEvent<HTMLInputElement>) => setAmount(parseInt(e.target.value.replace(',', '')))}/>
               <CurrencyInput className="form-control" id="price" placeholder="Precio total (€)" min={0} decimalsLimit={2} suffix=" €" groupSeparator="," decimalSeparator="." allowNegativeValue={false} onChange={(e:ChangeEvent<HTMLInputElement>) => setPrice(parseFloat(e.target.value.replace(',', '')))}/>

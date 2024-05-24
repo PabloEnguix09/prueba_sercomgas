@@ -1,4 +1,5 @@
-import { createOperation } from "../services/routes";
+import { create } from "../services/routes";
+import { OperationType } from "../types/types";
 
 export async function crearOperacion(marketer_id: number, client_id: number, type: string, amount: number, price: number) {
   
@@ -16,11 +17,13 @@ export async function crearOperacion(marketer_id: number, client_id: number, typ
       if(price < 0 || price === 0 || isNaN(price)) {
         throw new Error('El precio debe ser un número mayor que 0');
       }
-      await createOperation(marketer_id, client_id, type, amount, price).then((res) => {
+      const data: OperationType = {marketer_id, client_id, type, amount, price};
+      await create("operations", data).then((res) => {
+        
         if(res.status === 201) {
           window.location.href = '/';
         }
-        else if(res.status === 412) {
+        else if(res.status === 409) {
           throw new Error('Operación ya existente');
         }
         else {

@@ -1,6 +1,6 @@
 import '../css/App.css';
 import { useQueries } from '@tanstack/react-query';
-import { listMarketers, listOperations } from '../services/routes';
+import { list } from '../services/routes';
 import { Marketer, Operation } from '../types/types';
 import { useState } from 'react';
 
@@ -12,11 +12,11 @@ function App() {
     queries: [
       {
         queryKey: ['marketers'],
-        queryFn: listMarketers,
+        queryFn: () => list("marketers"),
       },
       {
         queryKey: ['operations', limit, currPage],
-        queryFn: () => listOperations(limit, currPage),
+        queryFn: () => list("operations", limit, currPage),
       }
     ]
   })

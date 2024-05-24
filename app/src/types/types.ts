@@ -10,6 +10,10 @@ export type MarketerOption = {
     label: string
 }
 
+export type MarketerType = {
+    name: string
+} 
+
 export type Operation = {
     id: number,
     marketer_id: number,
@@ -21,6 +25,14 @@ export type Operation = {
 }
 
 export type OperationType = {
+    marketer_id: number, 
+    client_id: number,
+    type: string,
+    amount: number,
+    price: number
+}
+
+export type OperationTypeOpt = {
     value: string,
     label: string
 }
